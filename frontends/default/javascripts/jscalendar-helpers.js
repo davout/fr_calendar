@@ -108,7 +108,12 @@ function setupCalendarFor(inputFieldId, displayFieldId, showTime)
     }
 }
 
-
+/**
+ * Completes a date string 
+ * Examples :
+ *   1/1/9 --> 01/01/2009
+ *   1/1   --> 01/01/2010 (if 2010 is the current year)
+ **/
 function completeDateStringFor(elt)
 {
     elt = $(elt);
@@ -122,16 +127,25 @@ function completeDateStringFor(elt)
         if (parts[0].length == 1) {
             completed = "0" + parts[0] + "/";
         }
+        else if (parts[0].length == 2) {
+            completed = completed + parts[0] + "/";
+        }
 
         if (parts[1].length == 1) {
             completed = completed + "0" + parts[1] + "/";
+        }
+        else if (parts[1].length == 2) {
+            completed = completed + parts[1] + "/";
         }
 
         if ((parts.length == 2) || ((parts.length == 3) && (parts[2].length == 0))){
             completed = completed + (new Date()).getFullYear().toString();
         }
-        else if ((parts.length == 3) && (parts[2].length > 0))  {
+        else if ((parts.length == 3) && ((parts[2].length > 0)) && (parts[2].length < 4))  {
             completed = completed + (2000 + parseInt(parts[2])).toString();
+        }
+        else if ((parts.length == 3) && (parts[2].length == 4)) {
+            completed = completed + parts[2];
         }
 
         elt.value = completed;
