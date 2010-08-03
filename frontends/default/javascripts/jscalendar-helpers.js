@@ -42,14 +42,12 @@ function onDateCalendarUpdate(calendar, date) {
 function onDatetimeCalendarUpdate(calendar, date) {
     $(calendar.params.displayArea).value = calendar.date.print("%d/%m/%Y %H:%M");
     $(calendar.params.inputField).value = calendar.date.print("%Y-%m-%d %H:%M:%S");
-//    if ($(calendar).dateClicked)
-//    {
-//        $(calendar).destroy();
-//    }
 }
 
 function onDateFieldBlur(elt)
 {
+    completeDateStringFor(elt);
+
     if (!isValidDateString($(elt).value) && $(elt).value != "")
     {
         alert("La date entrée n'est pas valide.\n Exemple : 09/01/2009")
@@ -107,5 +105,35 @@ function setupCalendarFor(inputFieldId, displayFieldId, showTime)
             onSelect : onDateCalendarUpdate,
             button: displayFieldId + "_img"
         });
+    }
+}
+
+
+function completeDateStringFor(elt)
+{
+    elt = $(elt);
+
+    if (!isValidDateString(elt.value) && (/^\d{1,2}\/\d{1,2}(\/\d{1,4})?$/.test(elt.value)))
+    {
+        parts = elt.value.split(/\//);
+        completed = "";
+
+
+        if (parts[0].length == 1) {
+            completed = "0" + parts[0] + "/";
+        }
+
+        if (parts[1].length == 1) {
+            completed = completed + "0" + parts[1] + "/";
+        }
+
+        if ((parts.length == 2) || ((parts.length == 3) && (parts[2].length == 0))){
+            completed = completed + (new Date()).getFullYear().toString();
+        }
+        else if ((parts.length == 3) && (parts[2].length > 0))  {
+            completed = completed + (2000 + parseInt(parts[2])).toString();
+        }
+
+        elt.value = completed;
     }
 }
