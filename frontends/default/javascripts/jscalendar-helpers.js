@@ -54,6 +54,8 @@ function onDateFieldBlur(elt)
         $(elt).value = "";
         elt.up().down("input.date-selector-hidden").value = "";
     }
+
+    updateHiddenDate(elt);
 }
 
 function onDateTimeFieldBlur(elt)
