@@ -10,8 +10,8 @@ module ActionView
         db_date_string = ""
         db_date_string = @object.send(method).strftime("%Y-%m-%d") unless @object.send(method).nil?
 
-        html = @template.hidden_field_tag("#{@object.class.to_s.underscore}[#{method}]", db_date_string, :class => "date-selector-hidden", :id => "#{field_id}_hidden")
-        html = "#{html}#{@template.text_field_tag(field_id , date_string, :onchange => "updateHiddenDate(this);", :onblur => "onDateFieldBlur(this);", :class => "fr-calendar-date-input")}"
+        html = @template.hidden_field(method, :class => "date-selector-hidden", :id => "#{field_id}_hidden")
+        html = "#{html}#{@template.text_field(method, :onchange => "updateHiddenDate(this);", :onblur => "onDateFieldBlur(this);", :onclick => "selectTextIn(this);", :class => "fr-calendar-date-input")}"
         html = "#{html}#{calendar_button_for_date(@object, method, field_id)}"
         @template.content_tag 'span', html
       end
@@ -26,7 +26,7 @@ module ActionView
         db_datetime_string = @object.send(method).strftime("%Y-%m-%d %H:%M") unless @object.send(method).nil?
 
         html = @template.hidden_field_tag("#{@object_name}[#{method}]", db_datetime_string, :class => "datetime-selector-hidden", :id => "#{field_id}_hidden")
-        html = "#{html}#{@template.text_field_tag(field_id , datetime_string, :onchange => "updateHiddenDateTime(this);", :onblur => "onDateTimeFieldBlur(this);", :class => "fr-calendar-datetime-input")}"
+        html = "#{html}#{@template.text_field_tag(field_id , datetime_string, :onchange => "updateHiddenDateTime(this);", :onblur => "onDateTimeFieldBlur(this);", :onclick => "selectTextIn(this);", :class => "fr-calendar-datetime-input")}"
         html = "#{html}#{calendar_button_for_datetime(@object, method, field_id)}"
         @template.content_tag 'span', html
       end
@@ -51,7 +51,7 @@ module ActionView
         db_datetime_string = value.blank? ? nil : value.strftime("%Y-%m-%d %H:%M") 
 
         html = @template.hidden_field_tag(name, db_datetime_string, :class => "datetime-selector-hidden", :id => "#{field_id}_hidden")
-        html = "#{html}#{@template.text_field_tag(field_id , datetime_string, :onchange => 'updateHiddenDateTime(this)', :onblur => 'onDateTimeFieldBlur(this)', :class => 'fr-calendar-datetime-input')}"
+        html = "#{html}#{@template.text_field_tag(field_id , datetime_string, :onchange => 'updateHiddenDateTime(this)', :onblur => 'onDateTimeFieldBlur(this)', :onclick => "selectTextIn(this);", :class => 'fr-calendar-datetime-input')}"
         html = "#{html}#{@template.image_tag("fr_calendar/default/calendar.png", :alt => "Sélecteur de date", :title => "Sélecteur de date", :id => field_id + "_img", :class => "fr-calendar-button")}"
         html = "#{html}<script type=\"text/javascript\" language='JavaScript'>setupCalendarFor('#{field_id}_hidden','#{field_id}', true)</script>"
 
@@ -65,7 +65,7 @@ module ActionView
         db_date_string = value.blank? ? nil : value.strftime("%Y-%m-%d")
 
         html = @template.hidden_field_tag(name, db_date_string, :class => "date-selector-hidden", :id => "#{field_id}_hidden")
-        html = "#{html}#{@template.text_field_tag(field_id , date_string, :onchange => 'updateHiddenDate(this)', :onblur => 'onDateFieldBlur(this)', :class => 'fr-calendar-date-input')}"
+        html = "#{html}#{@template.text_field_tag(field_id , date_string, :onchange => 'updateHiddenDate(this)', :onblur => 'onDateFieldBlur(this)', :onclick => "selectTextIn(this);", :class => 'fr-calendar-date-input')}"
         html = "#{html}#{@template.image_tag("fr_calendar/default/calendar.png", :alt => "Sélecteur de date", :title => "Sélecteur de date", :id => field_id + "_img", :class => "fr-calendar-button")}"
         html = "#{html}<script type=\"text/javascript\" language='JavaScript'>setupCalendarFor('#{field_id}_hidden','#{field_id}', false)</script>"
 

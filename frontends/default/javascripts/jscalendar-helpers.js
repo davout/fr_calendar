@@ -153,3 +153,7 @@ function completeDateStringFor(elt)
         elt.value = completed;
     }
 }
+
+function selectTextIn(elt) {
+    elt.select();
+}
