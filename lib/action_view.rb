@@ -10,8 +10,9 @@ module ActionView
         db_date_string = ""
         db_date_string = @object.send(method).strftime("%Y-%m-%d") unless @object.send(method).nil?
 
-        html = @template.hidden_field(method, :class => "date-selector-hidden", :id => "#{field_id}_hidden")
-        html = "#{html}#{@template.text_field(method, :onchange => "updateHiddenDate(this);", :onblur => "onDateFieldBlur(this);", :onclick => "selectTextIn(this);", :class => "fr-calendar-date-input")}"
+        html = @template.hidden_field_tag("#{@object.class.to_s.underscore}[#{method}]", db_date_string, :class => "date-selector-hidden", :id => "#{field_id}_hidden")
+        html = "#{html}#{@template.text_field_tag(field_id , date_string, :onchange => "updateHiddenDate(this);", :onblur => "onDateFieldBlur(this);", :onclick => "selectTextIn(this);", :class => "fr-calendar-date-input")}"
+
         html = "#{html}#{calendar_button_for_date(@object, method, field_id)}"
         @template.content_tag 'span', html
       end
