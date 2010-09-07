@@ -68,6 +68,8 @@ function onDateTimeFieldBlur(elt)
         $(elt).value = "";
         elt.up().down("input.datetime-selector-hidden").value = "";
     }
+
+    updateHiddenDateTime(elt);
 }
 
 function isValidDateString(str)
@@ -112,54 +114,93 @@ function setupCalendarFor(inputFieldId, displayFieldId, showTime)
     }
 }
 
-/**
- * Completes a date string 
- * Examples :
- *   1/1/9 --> 01/01/2009
- *   1/1   --> 01/01/2010 (if 2010 is the current year)
- **/
 function completeDateStringFor(elt)
 {
     elt = $(elt);
 
     if (!isValidDateString(elt.value) && (/^\d{1,2}\/\d{1,2}(\/\d{1,4})?$/.test(elt.value)))
     {
-        parts = elt.value.split(/\//);
-        completed = "";
+        elt.value = completeDateString(elt.value);
+    }
+}
 
+function completeDateTimeStringFor(elt)
+{
+    elt = $(elt);
 
-        if (parts[0].length == 1) {
-            completed = "0" + parts[0] + "/";
+    if (!isValidDateTimeString(elt.value) && (/^\d{1,2}\/\d{1,2}(\/\d{1,4})?(\s\d{1,2}(:\d{1,2})?)?$/.test(elt.value)))
+    {
+        parts = elt.value.split(/\s/);
+
+        if (parts.length > 1) {
+            timePart = parts[1];
         }
-        else if (parts[0].length == 2) {
-            completed = completed + parts[0] + "/";
+        else {
+            timePart = "";
         }
 
-        if (parts[1].length == 1) {
-            completed = completed + "0" + parts[1] + "/";
-        }
-        else if (parts[1].length == 2) {
-            completed = completed + parts[1] + "/";
-        }
+        completed = completeDateString(parts[0]) + " ";
 
-        if ((parts.length == 2) || ((parts.length == 3) && (parts[2].length == 0))){
-            completed = completed + (new Date()).getFullYear().toString();
+        if (timePart == "") {
+            completed = completed + "00:00";
         }
-        else if ((parts.length == 3) && ((parts[2].length > 0)) && (parts[2].length < 4))  {
-            completed = completed + (2000 + parseInt(parts[2])).toString();
-        }
-        else if ((parts.length == 3) && (parts[2].length == 4)) {
-            completed = completed + parts[2];
+        else {
+            parts = timePart.split(/:/);
+
+            if (parts[0].length == 1) {
+                completed = completed + "0" + parts[0];
+            }
+            else if (parts[0].length == 2) {
+                completed = completed + parts[0];
+            }
+
+            if (parts.length == 2) {
+                if (parts[1].length == 1) {
+                    completed = completed + ":0" + parts[1];
+                }
+                else if (parts[1].length == 2) {
+                    completed = completed + ":" + parts[1];
+                }
+            }
+            else if (parts.length == 1) {
+                completed = completed + ":00";
+            }
         }
 
         elt.value = completed;
     }
 }
 
+function completeDateString(dateString) {
+    parts = dateString.split(/\//);
 
-function completeDateTimeStringFor(elt)
-{
-   alert("Implement me");
+    completed = "";
+
+    if (parts[0].length == 1) {
+        completed = "0" + parts[0] + "/";
+    }
+    else if (parts[0].length == 2) {
+        completed = completed + parts[0] + "/";
+    }
+
+    if (parts[1].length == 1) {
+        completed = completed + "0" + parts[1] + "/";
+    }
+    else if (parts[1].length == 2) {
+        completed = completed + parts[1] + "/";
+    }
+
+    if ((parts.length == 2) || ((parts.length == 3) && (parts[2].length == 0))){
+        completed = completed + (new Date()).getFullYear().toString();
+    }
+    else if ((parts.length == 3) && ((parts[2].length > 0)) && (parts[2].length < 4))  {
+        completed = completed + (2000 + parseInt(parts[2])).toString();
+    }
+    else if ((parts.length == 3) && (parts[2].length == 4)) {
+        completed = completed + parts[2];
+    }
+
+    return(completed);
 }
 
 function selectTextIn(elt) {
