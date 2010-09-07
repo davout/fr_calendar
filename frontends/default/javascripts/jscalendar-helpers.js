@@ -60,6 +60,8 @@ function onDateFieldBlur(elt)
 
 function onDateTimeFieldBlur(elt)
 {
+    completeDateTimeStringFor(elt);
+
     if (!isValidDateTimeString($(elt).value) && $(elt).value != "")
     {
         alert("La date entrée n'est pas valide.\n Exemple : 09/01/2009 13:45")
@@ -152,6 +154,12 @@ function completeDateStringFor(elt)
 
         elt.value = completed;
     }
+}
+
+
+function completeDateTimeStringFor(elt)
+{
+   alert("Implement me");
 }
 
 function selectTextIn(elt) {
