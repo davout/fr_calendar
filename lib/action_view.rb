@@ -41,7 +41,7 @@ module ActionView
 
         tags << calendar_button_for(random_id, with_time)
 
-        @template.content_tag :span, tags
+        @template.content_tag(:span, tags.to_s.html_safe)
       end
 
       def date_select(method, options={}, html_options={})
@@ -102,7 +102,7 @@ module ActionView
         html = "#{html}#{@template.image_tag("fr_calendar/default/calendar.png", :alt => "Sélecteur de date", :title => "Sélecteur de date", :id => field_id + "_img", :class => "fr-calendar-button")}"
         html = "#{html}<script type=\"text/javascript\" language='JavaScript'>setupCalendarFor('#{field_id}_hidden','#{field_id}', false)</script>"
 
-        @template.content_tag 'span', html
+        @template.content_tag(:span, html.to_s.html_safe)
       end
     end
   end
