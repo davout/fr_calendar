@@ -78,31 +78,62 @@ module ActionView
     
     module DateHelper
       def datetime_select_tag(name, value=nil, options={})
-        field_id = "datetime_select_" + (rand*10**6).floor.to_s
-
-        datetime_string = value.blank? ? nil : value.strftime("%d/%m/%Y %H:%M")
-        db_datetime_string = value.blank? ? nil : value.strftime("%Y-%m-%d %H:%M") 
-
-        html = @template.hidden_field_tag(name, db_datetime_string, :class => "datetime-selector-hidden", :id => "#{field_id}_hidden")
-        html = "#{html}#{@template.text_field_tag(field_id , datetime_string, :onchange => 'updateHiddenDateTime(this)', :onblur => 'onDateTimeFieldBlur(this)', :onclick => "selectTextIn(this);", :class => 'fr-calendar-datetime-input')}"
-        html = "#{html}#{@template.image_tag("fr_calendar/default/calendar.png", :alt => "Sélecteur de date", :title => "Sélecteur de date", :id => field_id + "_img", :class => "fr-calendar-button")}"
-        html = "#{html}<script type=\"text/javascript\" language='JavaScript'>setupCalendarFor('#{field_id}_hidden','#{field_id}', true)</script>"
-
-        @template.content_tag 'span', html
+        date_selector_tag(name, true, value, options)
       end
 
       def date_select_tag(name, value=nil, options={})
-        field_id = "date_select_" + (rand*10**6).floor.to_s
+        date_selector_tag(name, false, value, options)
+      end
 
-        date_string = value.blank? ? nil : value.strftime("%d/%m/%Y")
-        db_date_string = value.blank? ? nil : value.strftime("%Y-%m-%d")
+      def date_selector_tag(name,  with_time, value=nil, options={})
+        random_id = "date_select_" + (rand*10**6).floor.to_s
 
-        html = @template.hidden_field_tag(name, db_date_string, :class => "date-selector-hidden", :id => "#{field_id}_hidden")
-        html = "#{html}#{@template.text_field_tag(field_id , date_string, :onchange => 'updateHiddenDate(this)', :onblur => 'onDateFieldBlur(this)', :onclick => "selectTextIn(this);", :class => 'fr-calendar-date-input')}"
-        html = "#{html}#{@template.image_tag("fr_calendar/default/calendar.png", :alt => "Sélecteur de date", :title => "Sélecteur de date", :id => field_id + "_img", :class => "fr-calendar-button")}"
-        html = "#{html}<script type=\"text/javascript\" language='JavaScript'>setupCalendarFor('#{field_id}_hidden','#{field_id}', false)</script>"
+        date_string, db_date_string = "", ""
 
-        @template.content_tag(:span, html.to_s.html_safe)
+        if value
+          hours_minutes = with_time ? " %H:%M" : ""
+
+          date_string = value.strftime("%d/%m/%Y#{hours_minutes}")
+          db_date_string = value.strftime("%Y-%m-%d#{hours_minutes}")
+        end
+
+        time_string = with_time ? "time" : ""
+
+        options.merge!(
+          :class => "date#{time_string}-selector-hidden",
+          :id => "#{random_id}_hidden"
+        )
+
+        html = hidden_field_tag(name, db_date_string, options)
+
+        options.merge!(
+          :class => "fr-calendar-date#{time_string}-input",
+          :name => random_id,
+          :id => random_id,
+          :onchange => "updateHiddenDate#{time_string.capitalize}(this);",
+          :onblur => "onDate#{time_string.capitalize}FieldBlur(this);",
+          :onclick => "selectTextIn(this);"
+        )
+
+        html << text_field_tag(random_id, date_string, options)
+        
+        html << image_tag("fr_calendar/default/calendar.png",
+          :alt => "Sélecteur de date",
+          :title => "Sélecteur de date",
+          :id => random_id + "_img",
+          :class => "fr-calendar-button"
+        )
+
+        js_options = {
+          :type => "text/javascript",
+          :language => "JavaScript"
+        }
+        
+        html << content_tag(:script, js_options) do
+          "setupCalendarFor('#{random_id}_hidden', '#{random_id}', #{with_time ? "true" : "false"});"
+        end
+
+        content_tag(:span, html.to_s.html_safe)
       end
     end
   end
