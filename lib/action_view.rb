@@ -34,7 +34,8 @@ module ActionView
           :id => random_id,
           :onchange => "updateHiddenDate#{time_string.capitalize}(this);",
           :onblur => "onDate#{time_string.capitalize}FieldBlur(this);",
-          :onclick => "selectTextIn(this);"
+          :onclick => "selectTextIn(this);",
+          :onkeydown => "handleKeyDown(this, event)"
         )
 
         tags << InstanceTag.new(@object_name, method, self, options.delete(:object)).to_input_field_tag("input", options)
@@ -112,7 +113,8 @@ module ActionView
           :id => random_id,
           :onchange => "updateHiddenDate#{time_string.capitalize}(this);",
           :onblur => "onDate#{time_string.capitalize}FieldBlur(this);",
-          :onclick => "selectTextIn(this);"
+          :onclick => "selectTextIn(this);",
+          :onkeydown => "handleKeyDown(this, event)"
         )
 
         html << text_field_tag(random_id, date_string, options)

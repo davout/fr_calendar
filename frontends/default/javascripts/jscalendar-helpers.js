@@ -206,3 +206,14 @@ function completeDateString(dateString) {
 function selectTextIn(elt) {
     elt.select();
 }
+
+function handleKeyDown(elt, evt) {
+    elt = $(elt);
+    evt = $(evt);
+
+    if (evt.keyCode == 13) {
+        elt.onblur();
+        evt.stop();
+        elt.up('form').submit();
+    }
+}
