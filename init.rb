@@ -16,11 +16,11 @@ available_frontends = Dir[File.join(directory, 'frontends', '*')].collect { |d| 
 [ :javascripts, :images ].each do |asset_type|
   path = "/public/#{asset_type}/fr_calendar"
   
-  FileUtils.rm_rf(File.join(RAILS_ROOT, path))
+  FileUtils.rm_rf(File.join(Rails.root, path))
   
   copy_files(path, path, directory)
   
-  File.open(File.join(RAILS_ROOT, path, 'DO_NOT_EDIT'), 'w') do |f|
+  File.open(File.join(Rails.root, path, 'DO_NOT_EDIT'), 'w') do |f|
     f.puts "Any changes made to files in sub-folders will be lost."
   end
 
