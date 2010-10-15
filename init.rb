@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/lib/action_view'
 require File.dirname(__FILE__) + '/lib/helpers/view'
 
 def copy_files(source_path, destination_path, directory)
-  source, destination = File.join(directory, source_path), File.join(RAILS_ROOT, destination_path)
+  source, destination = File.join(directory, source_path), File.join(Rails.root, destination_path)
   FileUtils.mkdir(destination) unless File.exist?(destination)
   FileUtils.cp_r(Dir.glob(source+'/*.*'), destination)
 end
